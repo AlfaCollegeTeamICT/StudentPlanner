@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Edit Task - StudentPlanner{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Edit Task</h3>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Task Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" required 
+                                   value="{{ task.title }}" placeholder="Enter task title">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" 
+                                      placeholder="Enter task description (optional)">{{ task.description or '' }}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="due_date" class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="due_date" name="due_date" 
+                                   value="{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else '' }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="completed" name="completed" 
+                                       {% if task.completed %}checked{% endif %} disabled>
+                                <label class="form-check-label" for="completed">
+                                    Task Completed
+                                </label>
+                                <small class="form-text text-muted d-block">
+                                    Use the Complete/Undo button in the task list to change completion status.
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('planner') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Task</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - StudentPlanner{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Admin Dashboard</h1>
+    <h2 class="mb-3">All Users</h2>
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <form action="/admin/users/{{ user.id }}/edit" method="get" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-primary">Edit</button>
+                    </form>
+                    <form action="/admin/users/{{ user.id }}/delete" method="post" class="d-inline" onsubmit="return confirm('Delete this user?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="bg-white">
+                    <strong>Tasks for {{ user.username }}:</strong>
+                    <table class="table table-sm table-bordered mt-2" style="margin-left: 30px; width: 95%;">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>Task ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in user.tasks %}
+                            <tr>
+                                <td>{{ task.id }}</td>
+                                <td>{{ task.title }}</td>
+                                <td>
+                                    {% if task.completed %}
+                                        <span class="badge bg-success">Completed</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form action="/admin/tasks/{{ task.id }}/edit" method="get" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-primary">Edit</button>
+                                    </form>
+                                    <form action="/admin/tasks/{{ task.id }}/delete" method="post" class="d-inline" onsubmit="return confirm('Delete this task?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">No tasks found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

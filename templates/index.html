@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}StudentPlanner - Home{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Welcome to StudentPlanner</h1>
+    <p>Your personal student planning assistant.</p>
+    {% if session.user_id and user %}
+        <div class="mt-4">
+            <p>Hello, {{ user.username }}!</p>
+            {% if user.role == 'admin' %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('planner') }}" class="btn btn-primary">Go to My Planner</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="mt-4">
+            <p>Please log in or register to start planning your studies.</p>
+            <a href="{{ url_for('login') }}" class="btn btn-primary me-2">Login</a>
+            <a href="{{ url_for('register') }}" class="btn btn-outline-primary">Register</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
