@@ -476,6 +476,93 @@ def delete_project_task(task_id):
     flash('Project task deleted successfully!')
     return redirect(url_for('project_board', project_id=project_id))
 
+# Admin routes
+@app.route('/admin/users/<int:user_id>/edit', methods=['GET', 'POST'])
+@login_required(role='admin')
+def admin_edit_user(user_id):
+    user = User.query.get_or_404(user_id)
+    
+    if request.method == 'POST':
+        user.username = request.form['username']
+        user.email = request.form['email']
+        user.role = request.form['role']
+        
+        # Only update password if provided
+        new_password = request.form.get('password')
+        if new_password:
+            user.password = generate_password_hash(new_password)
+        
+        # Check for username/email conflicts
+        existing_username = User.query.filter(User.username == user.username, User.id != user.id).first()
+        existing_email = User.query.filter(User.email == user.email, User.id != user.id).first()
+        
+        if existing_username:
+            flash('Username already exists')
+        elif existing_email:
+            flash('Email already exists')
+        else:
+            db.session.commit()
+            flash('User updated successfully!')
+            return redirect(url_for('dashboard'))
+    
+    return render_template('admin_edit_user.html', user=user)
+
+@app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
+@login_required(role='admin')
+def admin_delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    
+    # Prevent admin from deleting themselves
+    if user.id == session['user_id']:
+        flash('You cannot delete your own account')
+        return redirect(url_for('dashboard'))
+    
+    username = user.username
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'User "{username}" deleted successfully!')
+    return redirect(url_for('dashboard'))
+
+@app.route('/admin/tasks/<int:task_id>/edit', methods=['GET', 'POST'])
+@login_required(role='admin')
+def admin_edit_task(task_id):
+    task = Task.query.get_or_404(task_id)
+    
+    if request.method == 'POST':
+        task.title = request.form['title']
+        task.description = request.form.get('description', '')
+        task.completed = 'completed' in request.form
+        
+        due_date_str = request.form.get('due_date')
+        if due_date_str:
+            try:
+                task.due_date = datetime.strptime(due_date_str, '%Y-%m-%d')
+            except ValueError:
+                flash('Invalid date format')
+                return redirect(url_for('admin_edit_task', task_id=task_id))
+        else:
+            task.due_date = None
+        
+        if task.title:
+            db.session.commit()
+            flash('Task updated successfully!')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Task title is required')
+    
+    return render_template('admin_edit_task.html', task=task)
+
+@app.route('/admin/tasks/<int:task_id>/delete', methods=['POST'])
+@login_required(role='admin')
+def admin_delete_task(task_id):
+    task = Task.query.get_or_404(task_id)
+    
+    task_title = task.title
+    db.session.delete(task)
+    db.session.commit()
+    flash(f'Task "{task_title}" deleted successfully!')
+    return redirect(url_for('dashboard'))
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
