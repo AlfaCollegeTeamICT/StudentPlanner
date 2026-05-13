@@ -181,39 +181,5 @@ StudentPlanner/
     ├── dashboard.html     # Admin dashboard
     └── ...               # Task management templates
 ```
-
-### Adding New Features
-1. **Models**: Add new database models in `main.py`
-2. **Routes**: Create new Flask routes for functionality
-3. **Templates**: Design HTML templates in the `templates/` folder
-4. **Styling**: Use Bootstrap classes for consistent styling
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-
-## 🙋‍♂️ Support
-
-If you have any questions or run into issues:
-1. Check the existing issues on GitHub
-2. Create a new issue with detailed information
-3. Include steps to reproduce any bugs
-
-## 🚧 Roadmap
-
-- [ ] Email notifications for task assignments
-- [ ] File attachments for tasks
-- [ ] Calendar integration
-- [ ] Mobile app
-- [ ] Real-time collaboration features
-- [ ] Advanced reporting and analytics
-- [ ] Dark mode theme
-- [ ] API endpoints for third-party integrations
-
 ---
 
